@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>添加任务</title>
+  <script src="https://unpkg.com/leancloud-storage/dist/av.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      font-family: 'Pretendard', sans-serif;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 40px;
+      color: #333;
+    }
+
+    .form-card {
+      max-width: 500px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    input, select {
+      width: 90%;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      background-color: #fefefe;
+      color: #333;
+      transition: 0.3s ease;
+    }
+
+    select{
+      width: 97%;
+    }
+    input:focus {
+      outline: none;
+      border-color: #aabaff;
+      box-shadow: 0 0 0 2px rgba(170, 186, 255, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #aabaff 0%, #d8b5ff 100%);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .message {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .success {
+      color: #2ecc71;
+    }
+
+    .error {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>📖 添加新的教学任务</h1>
+
+  <div class="form-card">
+    <label for="title">任务标题</label>
+    <input type="text" id="title" placeholder="例如：批改作业">
+
+    <label for="time">时间</label>
+    <input type="time" id="time">
+
+    <label for="group">选择科目</label>
+    <select id="group">
+      <option value="">请选择科目</option>
+      <option value="语文">语文</option>
+      <option value="数学">数学</option>
+      <option value="英语">英语</option>
+      <option value="历史">历史</option>
+      <option value="地理">地理</option>
+      <option value="生物">生物</option>
+      <option value="政治">政治</option>
+    </select>
+
+
+    <button onclick="addTodo()">➕ 添加任务</button>
+
+    <div id="successMsg" class="message success"></div>
+    <div id="errorMsg" class="message error"></div>
+  </div>
+
+  <script>
+  // 替换为你自己的 LeanCloud 应用信息
+    const APP_ID = "TZYch01QOw8u2kuFhZmcuUsx-gzGzoHsz";
+    const APP_KEY = "rqK3Ist9vj5tVKu3K20TJNcI";
+    const SERVER_URL = "https://U0O04XV1mc5kfJ9wLvfDj392.lc-cn-n1-shared.com";
+
+    AV.init({
+      appId: APP_ID,
+      appKey: APP_KEY,
+      serverURL: SERVER_URL,
+    });
+
+    async function addTodo() {
+      const title = document.getElementById("title").value.trim();
+      const time = document.getElementById("time").value;
+      const group = document.getElementById("group").value.trim();
+
+
+      if (!title || !time || !category || !group) {
+        document.getElementById("errorMsg").innerText = "请完整填写所有内容";
+        document.getElementById("successMsg").innerText = "";
+        return;
+      }
+
+      const todo = new AV.Object("Todo");
+
+      todo.set("title", title);
+      todo.set("time", time);
+      todo.set("category", category);
+      todo.set("group", group);
+
+      console.log(todo)
+      try {
+        await todo.save();
+        document.getElementById("successMsg").innerText = "✅ 任务已成功添加！";
+        document.getElementById("errorMsg").innerText = "";
+        document.getElementById("title").value = "";
+        document.getElementById("time").value = "";
+        document.getElementById("group").value = "";
+      } catch (error) {
+        console.error("添加失败：", error);
+        document.getElementById("errorMsg").innerText = "❌ 添加失败，请检查网络或配置";
+        document.getElementById("successMsg").innerText = "";
+      }
+    }
+  </script>
+
+</body>
+</html>
