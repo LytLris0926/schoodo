@@ -141,7 +141,7 @@
       const group = document.getElementById("group").value.trim();
 
 
-      if (!title || !time || !category || !group) {
+      if (!title || !time || !group) {
         document.getElementById("errorMsg").innerText = "请完整填写所有内容";
         document.getElementById("successMsg").innerText = "";
         return;
@@ -151,7 +151,6 @@
 
       todo.set("title", title);
       todo.set("time", time);
-      todo.set("category", category);
       todo.set("group", group);
 
       console.log(todo)
